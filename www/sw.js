@@ -1,0 +1,4 @@
+const C = 'scanner-offline-v1', F = ['./', 'index.html', 'app.js', 'scan-core.js', 'manifest.webmanifest', 'css/tailwind.css', 'css/app.css', 'vendor/opencv.js', 'vendor/fontawesome/css/all.min.css', 'vendor/fontawesome/webfonts/fa-solid-900.woff2', 'icons/icon-192.png', 'icons/icon-512.png'].concat(['arabic', 'latin'].flatMap(s => [400, 700, 800].map(w => `fonts/tajawal-${s}-${w}-normal.woff2`)));
+self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(C).then(c => c.addAll(F))); });
+self.addEventListener('activate', e => e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== C).map(x => caches.delete(x)))).then(() => self.clients.claim())));
+self.addEventListener('fetch', e => { if (e.request.method === 'GET') e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(r => r || fetch(e.request))); });
